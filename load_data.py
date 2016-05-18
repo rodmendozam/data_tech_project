@@ -3,10 +3,11 @@ import sys
 
 
 
-def earliest_arrival_time(dict, x, t_start, t_end ):
+def earliest_arrival_time(src, x, t_start, t_end ):
+    dict = initDict(src,sys.maxsize)
     dict[x] = t_start
     # f = open('dataset/out.epinions')
-    f = open('dataset/test.csv')
+    f = open(src)
     for line in iter(f):
         u, v, alpha, t = line.split()
         u, v, alpha, t = str(u), str(v), int(alpha), int(t)
@@ -18,21 +19,40 @@ def earliest_arrival_time(dict, x, t_start, t_end ):
             break
     return dict
 
-
-if __name__ == "__main__":
-
+def latest_depature_time(src, x, t_start, t_end ):
+    dict = initDict(src,-sys.maxsize)
+    dict[x] = t_end
     # f = open('dataset/out.epinions')
-    f = open('dataset/test.csv')
+    f = open(src)
+    for line in reversed(list(f)):
+        u, v, alpha, t = line.split()
+        u, v, alpha, t = str(u), str(v), int(alpha), int(t)
+        if int(t) >= int(t_start):
+            if (t+alpha) <= int(dict[v]):
+                if t > int(dict[u]):
+                    dict[u] = t
+        else:
+            break
+    return dict
+
+def initDict(src, value):
+    f = open(src)
     dict = {}
     for line in iter(f):
         u, v, alpha, t = line.split()
-        dict[u] = sys.maxsize
-        dict[v] = sys.maxsize
+        dict[u] = value
+        dict[v] = value
     f.close()
+    return dict
 
 
-    result = earliest_arrival_time(dict, '1', 0, sys.maxsize)
-    print(result)
+if __name__ == "__main__":
+    src = 'dataset/test.csv'
+    print(latest_depature_time(src,'4',0,sys.maxsize))
+    # f = open('dataset/out.epinions')
+
+    #result = earliest_arrival_time(dict, '1', 0, sys.maxsize)
+    #print(result)
 
 
 
