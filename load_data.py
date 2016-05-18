@@ -1,25 +1,18 @@
 import sys
 
-#store in a dictonary the nodes
-def init_graph():
-    f = open('dataset/out.epinions')
-    dict = {}
-    for line in iter(f):
-        u, v, alpha, t = line.split()
-        dict[u] = sys.maxsize
-        dict[v] = sys.maxsize
-    f.close()
+
 
 
 def earliest_arrival_time(dict, x, t_start, t_end ):
     dict[x] = t_start
-    f = open('dataset/out.epinions')
+    # f = open('dataset/out.epinions')
+    f = open('dataset/test.csv')
     for line in iter(f):
         u, v, alpha, t = line.split()
-        u, v = str(u), str(v)
+        u, v, alpha, t = str(u), str(v), int(alpha), int(t)
 
-        if (int(t) + int(alpha)) <= t_end and int(t) >= int(dict[u]):
-            if t+alpha < dict[v]:
+        if (t+alpha) <= t_end and t >= int(dict[u]):
+            if t+alpha < int(dict[v]):
                 dict[v] = t + alpha
         elif t >= t_end:
             break
@@ -28,7 +21,8 @@ def earliest_arrival_time(dict, x, t_start, t_end ):
 
 if __name__ == "__main__":
 
-    f = open('dataset/out.epinions')
+    # f = open('dataset/out.epinions')
+    f = open('dataset/test.csv')
     dict = {}
     for line in iter(f):
         u, v, alpha, t = line.split()
@@ -36,8 +30,8 @@ if __name__ == "__main__":
         dict[v] = sys.maxsize
     f.close()
 
-    result = earliest_arrival_time(dict, '23', 0, sys.maxsize)
 
+    result = earliest_arrival_time(dict, '1', 0, sys.maxsize)
     print(result)
 
 
