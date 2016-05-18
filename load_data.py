@@ -1,35 +1,33 @@
 import sys
-
-
-
+import math
 
 def earliest_arrival_time(src, x, t_start, t_end ):
-    dict = initDict(src,sys.maxsize)
+    dict = initDict(src, math.inf)
     dict[x] = t_start
     # f = open('dataset/out.epinions')
     f = open(src)
     for line in iter(f):
         u, v, alpha, t = line.split()
-        u, v, alpha, t = str(u), str(v), int(alpha), int(t)
+        u, v, alpha, t = str(u), str(v), float(alpha), float(t)
 
-        if (t+alpha) <= t_end and t >= int(dict[u]):
-            if t+alpha < int(dict[v]):
+        if (t+alpha) <= t_end and t >= float(dict[u]):
+            if t+alpha < float(dict[v]):
                 dict[v] = t + alpha
         elif t >= t_end:
             break
     return dict
 
 def latest_depature_time(src, x, t_start, t_end ):
-    dict = initDict(src,-sys.maxsize)
+    dict = initDict(src,-math.inf)
     dict[x] = t_end
     # f = open('dataset/out.epinions')
     f = open(src)
     for line in reversed(list(f)):
         u, v, alpha, t = line.split()
-        u, v, alpha, t = str(u), str(v), int(alpha), int(t)
-        if int(t) >= int(t_start):
-            if (t+alpha) <= int(dict[v]):
-                if t > int(dict[u]):
+        u, v, alpha, t = str(u), str(v), float(alpha), float(t)
+        if float(t) >= float(t_start):
+            if (t+alpha) <= float(dict[v]):
+                if t > float(dict[u]):
                     dict[u] = t
         else:
             break
@@ -48,10 +46,10 @@ def initDict(src, value):
 
 if __name__ == "__main__":
     src = 'dataset/test.csv'
-    print(latest_depature_time(src,'4',0,sys.maxsize))
+    print(latest_depature_time(src,'4',0,math.inf))
     # f = open('dataset/out.epinions')
 
-    #result = earliest_arrival_time(dict, '1', 0, sys.maxsize)
+    #result = earliest_arrival_time(dict, '1', 0, math.inf)
     #print(result)
 
 
