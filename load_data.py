@@ -20,7 +20,6 @@ def earliest_arrival_time(src, x, t_start, t_end ):
     return dict
 
 def latest_depature_time(dict, x, t_start, t_end, f):
-
     # dict = initDict(src,-math.inf)
     dict[x] = t_end
     # f = open('dataset/out.epinions')
@@ -34,6 +33,7 @@ def latest_depature_time(dict, x, t_start, t_end, f):
                     dict[u] = t
         else:
             break
+    f.seek(0)
     return dict
 
 def initDict(src, value):
