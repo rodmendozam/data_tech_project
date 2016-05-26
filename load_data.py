@@ -18,6 +18,11 @@ def earliest_arrival_time(dict, x, t_start, t_end, f):
             break
     return time.time() - timeStart
 
+def earliest_arrival_time_xuan(dict, x, t_start, t_end, f):
+    timeStart = time.time()
+    dict[x] = t_start
+    return time.time() - timeStart
+
 def latest_depature_time(dict, x, t_start, t_end, f):
     timeStart = time.time()
     # dict = initDict(src,-math.inf)
@@ -45,6 +50,19 @@ def initDict(src, value):
     f.close()
     return dict
 
+def makeAdjacencyList(src):
+    f = open(src)
+    dict = {}
+    for line in iter(f):
+        u, v, alpha, t = line.split()
+        if u not in dict:
+            dict[u] = set()
+        dict[u].add(v)
+    return dict
+
+
+
+
 def wrapper(func, *args, **kwargs):
     def wrapped():
         return func(*args, **kwargs)
@@ -69,10 +87,11 @@ def select_100_random(src):
     return result
 
 if __name__ == "__main__":
-    #src = 'dataset/test.csv'
+    src = 'dataset/test.csv'
     src = 'dataset/out.epinions'
     db = initDict(src,-math.inf)
     f = open(src)
+    print(makeAdjacencyList(src))
     print(latest_depature_time(db,'4',0,math.inf, f))
     f.close()
 
