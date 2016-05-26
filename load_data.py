@@ -3,6 +3,7 @@ import math
 import timeit
 import random
 import time
+import operator
 
 def earliest_arrival_time(dict, x, t_start, t_end, f):
     timeStart = time.time()
@@ -63,21 +64,26 @@ def makeAdjacencyList(src):
 
 
 
-def wrapper(func, *args, **kwargs):
-    def wrapped():
-        return func(*args, **kwargs)
-    return wrapped
+#def wrapper(func, *args, **kwargs):
+#    def wrapped():
+#        return func(*args, **kwargs)
+#    return wrapped
 
-def timeAlgorithm(wrappedAlgorithm, iterations):
-    print(timeit.timeit(wrappedAlgorithm, number=iterations) / iterations)
+#def timeAlgorithm(wrappedAlgorithm, iterations):
+#    print(timeit.timeit(wrappedAlgorithm, number=iterations) / iterations)
 
 
 
-def select_top_10_degree(src):
-    graph = initDict(src,sys.maxsize)
-    result  = []
-
-    return  result
+def select_top_10_degree(dist):
+    adjl = dist.copy()
+    for key in adjl:
+        adjl[key] = len(adjl[key])
+    sorted_adjl = sorted(adjl.items(), key=operator.itemgetter(1), reverse=True)
+    top10 = []
+    for i in range (0,10):
+        if len(sorted_adjl) >= i + 1:
+            top10.append(sorted_adjl[i][0])
+    return top10
 
 def select_100_random(src):
     graph = initDict(src,sys.maxsize)
@@ -91,7 +97,8 @@ if __name__ == "__main__":
     src = 'dataset/out.epinions'
     db = initDict(src,-math.inf)
     f = open(src)
-    print(makeAdjacencyList(src))
+    dict = makeAdjacencyList(src)
+    print(select_top_10_degree(dict))
     print(latest_depature_time(db,'4',0,math.inf, f))
     f.close()
 
