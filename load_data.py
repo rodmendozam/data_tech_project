@@ -85,9 +85,9 @@ if __name__ == "__main__":
 
     f.close()
 
-    # #select 100 random nodes
-    # data_epinions = 'dataset/out.epinions'
-    # print( select_100_random(data_epinions) )
+    #select 100 random nodes
+    data_epinions = 'dataset/out.epinions'
+    print( select_100_random(data_epinions) )
 
 
     #
