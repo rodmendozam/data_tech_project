@@ -1,5 +1,6 @@
 import sys
 import math
+import timeit
 
 def earliest_arrival_time(src, x, t_start, t_end ):
     dict = initDict(src, math.inf)
@@ -43,10 +44,22 @@ def initDict(src, value):
     f.close()
     return dict
 
+def wrapper(func, *args, **kwargs):
+    def wrapped():
+        return func(*args, **kwargs)
+    return wrapped
+
+def timeAlgorithm(wrappedAlgorithm, iterations):
+    print(timeit.timeit(wrappedAlgorithm, number=iterations) / iterations)
+
 
 if __name__ == "__main__":
     src = 'dataset/test.csv'
-    print(latest_depature_time(src,'4',0,math.inf))
+    src = 'dataset/out.epinions'
+    iterations = 100
+    wrapped = wrapper(latest_depature_time, src,'4',0,math.inf)
+    timeAlgorithm(wrapped, iterations)
+    #print(latest_depature_time(src,'4',0,math.inf))
     # f = open('dataset/out.epinions')
 
     #result = earliest_arrival_time(dict, '1', 0, math.inf)
