@@ -1,35 +1,34 @@
 import sys
-import random
-
-
+import math
+import timeit
 
 def earliest_arrival_time(src, x, t_start, t_end ):
-    dict = initDict(src,sys.maxsize)
+    dict = initDict(src, math.inf)
     dict[x] = t_start
     # f = open('dataset/out.epinions')
     f = open(src)
     for line in iter(f):
         u, v, alpha, t = line.split()
-        u, v, alpha, t = str(u), str(v), int(alpha), int(t)
+        u, v, alpha, t = str(u), str(v), float(alpha), float(t)
 
-        if (t+alpha) <= t_end and t >= int(dict[u]):
-            if t+alpha < int(dict[v]):
+        if (t+alpha) <= t_end and t >= float(dict[u]):
+            if t+alpha < float(dict[v]):
                 dict[v] = t + alpha
         elif t >= t_end:
             break
     return dict
 
 def latest_depature_time(src, x, t_start, t_end ):
-    dict = initDict(src,-sys.maxsize)
+    dict = initDict(src,-math.inf)
     dict[x] = t_end
     # f = open('dataset/out.epinions')
     f = open(src)
     for line in reversed(list(f)):
         u, v, alpha, t = line.split()
-        u, v, alpha, t = str(u), str(v), int(alpha), int(t)
-        if int(t) >= int(t_start):
-            if (t+alpha) <= int(dict[v]):
-                if t > int(dict[u]):
+        u, v, alpha, t = str(u), str(v), float(alpha), float(t)
+        if float(t) >= float(t_start):
+            if (t+alpha) <= float(dict[v]):
+                if t > float(dict[u]):
                     dict[u] = t
         else:
             break
@@ -44,6 +43,14 @@ def initDict(src, value):
         dict[v] = value
     f.close()
     return dict
+
+def wrapper(func, *args, **kwargs):
+    def wrapped():
+        return func(*args, **kwargs)
+    return wrapped
+
+def timeAlgorithm(wrappedAlgorithm, iterations):
+    print(timeit.timeit(wrappedAlgorithm, number=iterations) / iterations)
 
 
 
@@ -63,20 +70,24 @@ def select_100_random(src):
 
 
 if __name__ == "__main__":
-
-    #select 100 random nodes
+    
+#select 100 random nodes
     data_epinions = 'dataset/out.epinions'
     select_100_random(data_epinions)
+src = 'dataset/test.csv'
+    print(latest_depature_time(src,'4',0,sys.maxsize))
+    # f = open('dataset/out.epinions')
+src = 'dataset/test.csv'
 
+    src = 'dataset/out.epinions'
+    iterations = 100
+    wrapped = wrapper(latest_depature_time, src,'4',0,math.inf)
+    timeAlgorithm(wrapped, iterations)
+    #print(latest_depature_time(src,'4',0,math.inf))
+    # f = open('dataset/out.epinions')
 
-    # print('Hello')
-    # src = 'dataset/test.csv'
-    # data_epinions = 'dataset/out.epinions'
-    # # print(latest_depature_time(src,'4',0,sys.maxsize))
-    # # f = open('dataset/out.epinions')
-
-    # result = earliest_arrival_time(data_epinions, '1', 0, sys.maxsize)
-    # print(result)
+    #result = earliest_arrival_time(dict, '1', 0, sys.maxsize)
+    #print(result)
 
 
 
