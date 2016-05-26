@@ -1,5 +1,5 @@
 import sys
-
+import random
 
 
 
@@ -46,13 +46,38 @@ def initDict(src, value):
     return dict
 
 
-if __name__ == "__main__":
-    src = 'dataset/test.csv'
-    print(latest_depature_time(src,'4',0,sys.maxsize))
-    # f = open('dataset/out.epinions')
 
-    #result = earliest_arrival_time(dict, '1', 0, sys.maxsize)
-    #print(result)
+def select_top_10_degree(src):
+    graph = initDict(src,sys.maxsize)
+    result  = []
+
+    return  result
+
+def select_100_random(src):
+    graph = initDict(src,sys.maxsize)
+    result  = []
+    for i in range(0, 100):
+        result.append( random.choice(list(graph.keys())) )
+    return result
+
+
+
+if __name__ == "__main__":
+
+    #select 100 random nodes
+    data_epinions = 'dataset/out.epinions'
+    select_100_random(data_epinions)
+
+
+    # print('Hello')
+    # src = 'dataset/test.csv'
+    # data_epinions = 'dataset/out.epinions'
+    # # print(latest_depature_time(src,'4',0,sys.maxsize))
+    # # f = open('dataset/out.epinions')
+
+    # result = earliest_arrival_time(data_epinions, '1', 0, sys.maxsize)
+    # print(result)
+
 
 
 
