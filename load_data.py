@@ -92,14 +92,21 @@ def select_100_random(src):
         result.append( random.choice(list(graph.keys())) )
     return result
 
+def runExperiments(nodes, db, f):
+    total = 0
+    for node in nodes:
+        total += latest_depature_time(db.copy(), node,0, math.inf, f)
+        f.seek(0)
+    return total / len(nodes)
+
 if __name__ == "__main__":
     src = 'dataset/test.csv'
-    src = 'dataset/out.epinions'
+    #src = 'dataset/out.epinions'
     db = initDict(src,-math.inf)
     f = open(src)
     dict = makeAdjacencyList(src)
-    print(select_top_10_degree(dict))
-    print(latest_depature_time(db,'4',0,math.inf, f))
+    nodes = select_top_10_degree(dict)
+    print(runExperiments(nodes, db, f))
     f.close()
 
     # #select 100 random nodes
