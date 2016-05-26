@@ -77,7 +77,7 @@ if __name__ == "__main__":
     db = initDict(src,-math.inf)
 
     f = open(src)
-
+    
     iterations = 100
     wrapped = wrapper(latest_depature_time, db,'4',0,math.inf, f)
     timeAlgorithm(wrapped, iterations)
@@ -87,7 +87,9 @@ if __name__ == "__main__":
 
     # #select 100 random nodes
     # data_epinions = 'dataset/out.epinions'
-    # select_100_random(data_epinions)
+    # print( select_100_random(data_epinions) )
+
+
     #
     #
     # # src = 'dataset/test.csv'
