@@ -2,12 +2,11 @@ import sys
 import math
 import timeit
 import random
+import time
 
-def earliest_arrival_time(src, x, t_start, t_end ):
-    dict = initDict(src, math.inf)
+def earliest_arrival_time(dict, x, t_start, t_end, f):
+    timeStart = time.time()
     dict[x] = t_start
-    # f = open('dataset/out.epinions')
-    f = open(src)
     for line in iter(f):
         u, v, alpha, t = line.split()
         u, v, alpha, t = str(u), str(v), float(alpha), float(t)
@@ -17,9 +16,10 @@ def earliest_arrival_time(src, x, t_start, t_end ):
                 dict[v] = t + alpha
         elif t >= t_end:
             break
-    return dict
+    return time.time() - timeStart
 
 def latest_depature_time(dict, x, t_start, t_end, f):
+    timeStart = time.time()
     # dict = initDict(src,-math.inf)
     dict[x] = t_end
     # f = open('dataset/out.epinions')
@@ -33,8 +33,7 @@ def latest_depature_time(dict, x, t_start, t_end, f):
                     dict[u] = t
         else:
             break
-    f.seek(0)
-    return dict
+    return time.time() - timeStart
 
 def initDict(src, value):
     f = open(src)
@@ -69,27 +68,17 @@ def select_100_random(src):
         result.append( random.choice(list(graph.keys())) )
     return result
 
-
-
 if __name__ == "__main__":
-
+    #src = 'dataset/test.csv'
     src = 'dataset/out.epinions'
     db = initDict(src,-math.inf)
-
     f = open(src)
-    
-    iterations = 100
-    wrapped = wrapper(latest_depature_time, db,'4',0,math.inf, f)
-    timeAlgorithm(wrapped, iterations)
-
-
+    print(latest_depature_time(db,'4',0,math.inf, f))
     f.close()
 
-    #select 100 random nodes
-    data_epinions = 'dataset/out.epinions'
-    print( select_100_random(data_epinions) )
-
-
+    # #select 100 random nodes
+    # data_epinions = 'dataset/out.epinions'
+    # select_100_random(data_epinions)
     #
     #
     # # src = 'dataset/test.csv'
