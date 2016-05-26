@@ -1,6 +1,7 @@
 import sys
 import math
 import timeit
+import random
 
 def earliest_arrival_time(src, x, t_start, t_end ):
     dict = initDict(src, math.inf)
@@ -18,11 +19,12 @@ def earliest_arrival_time(src, x, t_start, t_end ):
             break
     return dict
 
-def latest_depature_time(src, x, t_start, t_end ):
-    dict = initDict(src,-math.inf)
+def latest_depature_time(dict, x, t_start, t_end, f):
+
+    # dict = initDict(src,-math.inf)
     dict[x] = t_end
     # f = open('dataset/out.epinions')
-    f = open(src)
+    # f = open(src)
     for line in reversed(list(f)):
         u, v, alpha, t = line.split()
         u, v, alpha, t = str(u), str(v), float(alpha), float(t)
@@ -70,27 +72,43 @@ def select_100_random(src):
 
 
 if __name__ == "__main__":
-    
-#select 100 random nodes
-    data_epinions = 'dataset/out.epinions'
-    select_100_random(data_epinions)
-src = 'dataset/test.csv'
-    print(latest_depature_time(src,'4',0,sys.maxsize))
-    # f = open('dataset/out.epinions')
-src = 'dataset/test.csv'
 
     src = 'dataset/out.epinions'
+    db = initDict(src,-math.inf)
+
+    f = open(src)
+
     iterations = 100
-    wrapped = wrapper(latest_depature_time, src,'4',0,math.inf)
+    wrapped = wrapper(latest_depature_time, db,'4',0,math.inf, f)
     timeAlgorithm(wrapped, iterations)
-    #print(latest_depature_time(src,'4',0,math.inf))
-    # f = open('dataset/out.epinions')
-
-    #result = earliest_arrival_time(dict, '1', 0, sys.maxsize)
-    #print(result)
 
 
+    f.close()
 
+    # #select 100 random nodes
+    # data_epinions = 'dataset/out.epinions'
+    # select_100_random(data_epinions)
+    #
+    #
+    # # src = 'dataset/test.csv'
+    # # print(latest_depature_time(src,'4',0,sys.maxsize))
+    # # f = open('dataset/out.epinions')
+    #
+    # # src = 'dataset/test.csv'
+    # src = 'dataset/out.epinions'
+    # iterations = 100
+    # wrapped = wrapper(latest_depature_time, src,'4',0,math.inf)
+    # timeAlgorithm(wrapped, iterations)
+    #
+    #
+    # #print(latest_depature_time(src,'4',0,math.inf))
+    # # f = open('dataset/out.epinions')
+    #
+    # #result = earliest_arrival_time(dict, '1', 0, sys.maxsize)
+    # #print(result)
+    #
+    #
+    #
 
 
 # print(dict)
