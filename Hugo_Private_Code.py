@@ -37,6 +37,7 @@ def computerUFJ(s, adjl):
     while pq != []:
         root = heapq.heappop(pq)
         rootNode = root[2]
+        open[rootNode] = False
         for neighbour in adjl[rootNode]:
             if open[neighbour]:
                 print('Placeholder to not make it crash')
