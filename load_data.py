@@ -100,6 +100,7 @@ if __name__ == "__main__":
     f = open(src)
     dict = makeAdjacencyList(src)
     nodes = select_top_10_degree(dict)
+    print(computerUFJ('1', dict))
     print(runExperiments(nodes, db, f))
     f.close()
 
