@@ -4,6 +4,9 @@ import timeit
 import random
 import time
 import operator
+from Hugo_Private_Code import *
+from Advaita_Private_Code import *
+from Rodrigo_Private_Code import *
 
 def earliest_arrival_time(dict, x, t_start, t_end, f):
     timeStart = time.time()
@@ -74,16 +77,7 @@ def makeAdjacencyList(src):
 
 
 
-def select_top_10_degree(dist):
-    adjl = dist.copy()
-    for key in adjl:
-        adjl[key] = len(adjl[key])
-    sorted_adjl = sorted(adjl.items(), key=operator.itemgetter(1), reverse=True)
-    top10 = []
-    for i in range (0,10):
-        if len(sorted_adjl) >= i + 1:
-            top10.append(sorted_adjl[i][0])
-    return top10
+
 
 def select_100_random(src):
     graph = initDict(src,sys.maxsize)
@@ -97,7 +91,7 @@ def runExperiments(nodes, db, f):
     for node in nodes:
         total += latest_depature_time(db.copy(), node,0, math.inf, f)
         f.seek(0)
-    return total / len(nodes)
+    return float(total) / float(len(nodes))
 
 if __name__ == "__main__":
     src = 'dataset/test.csv'
