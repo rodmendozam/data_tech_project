@@ -4,6 +4,10 @@ import math
 import timeit
 import random
 import time
+import operator
+from Hugo_Private_Code import *
+from Advaita_Private_Code import *
+from Rodrigo_Private_Code import *
 
 def earliest_arrival_time(dict, x, t_start, t_end, f):
     timeStart = time.time()
@@ -17,6 +21,11 @@ def earliest_arrival_time(dict, x, t_start, t_end, f):
                 dict[v] = t + alpha
         elif t >= t_end:
             break
+    return time.time() - timeStart
+
+def earliest_arrival_time_xuan(dict, x, t_start, t_end, f):
+    timeStart = time.time()
+    dict[x] = t_start
     return time.time() - timeStart
 
 def latest_depature_time(dict, x, t_start, t_end, f):
@@ -46,13 +55,16 @@ def initDict(src, value):
     f.close()
     return dict
 
-def wrapper(func, *args, **kwargs):
-    def wrapped():
-        return func(*args, **kwargs)
-    return wrapped
+def makeAdjacencyList(src):
+    f = open(src)
+    dict = {}
+    for line in iter(f):
+        u, v, alpha, t = line.split()
+        if u not in dict:
+            dict[u] = set()
+        dict[u].add(v)
+    return dict
 
-def timeAlgorithm(wrappedAlgorithm, iterations):
-    print(timeit.timeit(wrappedAlgorithm, number=iterations) / iterations)
 
 
 def select_top_10_degree_collection():
@@ -71,11 +83,17 @@ def select_top_10_degree_collection():
     xy = my.most_common(10)
     print(xy)
 
-def select_top_10_degree(src):
-    graph = initDict(src,sys.maxsize)
-    result  = []
+#def wrapper(func, *args, **kwargs):
+#    def wrapped():
+#        return func(*args, **kwargs)
+#    return wrapped
 
-    return  result
+#def timeAlgorithm(wrappedAlgorithm, iterations):
+#    print(timeit.timeit(wrappedAlgorithm, number=iterations) / iterations)
+
+
+
+
 
 def select_100_random(src):
     graph = initDict(src,sys.maxsize)
@@ -84,16 +102,23 @@ def select_100_random(src):
         result.append( random.choice(list(graph.keys())) )
     return result
 
+def runExperiments(nodes, db, f):
+    total = 0
+    for node in nodes:
+        total += latest_depature_time(db.copy(), node,0, math.inf, f)
+        f.seek(0)
+    return float(total) / float(len(nodes))
+
 if __name__ == "__main__":
-
-    select_top_10_degree_collection()
-
-    #src = 'dataset/test.csv'
-    # src = 'dataset/out.epinions'
-    # db = initDict(src,-math.inf)
-    # f = open(src)
-    # print(latest_depature_time(db,'4',0,math.inf, f))
-    # f.close()
+    src = 'dataset/test.csv'
+    #src = 'dataset/out.epinions'
+    db = initDict(src,-math.inf)
+    f = open(src)
+    dict = makeAdjacencyList(src)
+    nodes = select_top_10_degree(dict)
+    print(computerUFJ('1', dict))
+    print(runExperiments(nodes, db, f))
+    f.close()
 
     # #select 100 random nodes
     # data_epinions = 'dataset/out.epinions'
