@@ -1,3 +1,4 @@
+from collections import Counter
 import sys
 import math
 import timeit
@@ -54,6 +55,21 @@ def timeAlgorithm(wrappedAlgorithm, iterations):
     print(timeit.timeit(wrappedAlgorithm, number=iterations) / iterations)
 
 
+def select_top_10_degree_collection():
+    # graph = initDict(src,sys.maxsize)
+    new_dict = {}
+    f = open('dataset/out.epinions')
+    # f = open('dataset/test.csv')
+
+    list = []
+    for line in iter(f):
+        u, v, alpha, t = line.split()
+        u, v, alpha, t = str(u), str(v), float(alpha), float(t)
+        list.append(v)
+    # print(list)
+    my = Counter(list)
+    xy = my.most_common(10)
+    print(xy)
 
 def select_top_10_degree(src):
     graph = initDict(src,sys.maxsize)
@@ -69,12 +85,15 @@ def select_100_random(src):
     return result
 
 if __name__ == "__main__":
+
+    select_top_10_degree_collection()
+
     #src = 'dataset/test.csv'
-    src = 'dataset/out.epinions'
-    db = initDict(src,-math.inf)
-    f = open(src)
-    print(latest_depature_time(db,'4',0,math.inf, f))
-    f.close()
+    # src = 'dataset/out.epinions'
+    # db = initDict(src,-math.inf)
+    # f = open(src)
+    # print(latest_depature_time(db,'4',0,math.inf, f))
+    # f.close()
 
     # #select 100 random nodes
     # data_epinions = 'dataset/out.epinions'
