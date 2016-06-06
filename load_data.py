@@ -62,7 +62,8 @@ def makeAdjacencyList(src):
         u, v, alpha, t = line.split()
         if u not in dict:
             dict[u] = set()
-        dict[u].add(v)
+        entry = (v, alpha,t)
+        dict[u].add(entry)
     return dict
 
 
@@ -115,6 +116,7 @@ if __name__ == "__main__":
     db = initDict(src,-math.inf)
     f = open(src)
     dict = makeAdjacencyList(src)
+    print(dict)
     nodes = select_top_10_degree(dict)
     print(computerUFJ('1', dict))
     print(runExperiments(nodes, db, f))

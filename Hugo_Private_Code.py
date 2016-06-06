@@ -39,7 +39,7 @@ def computerUFJ(s, adjl):
         rootNode = root[2]
         open[rootNode] = False
         for neighbour in adjl[rootNode]:
-            if open[neighbour]:
+            if open[neighbour[0]]:
                 print('Placeholder to not make it crash')
                 #Rodrigo continue step c) from i) here
 
