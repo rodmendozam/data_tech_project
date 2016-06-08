@@ -5,23 +5,34 @@ import timeit
 import random
 import time
 import operator
+import numpy as np
 from Hugo_Private_Code import *
 from Advaita_Private_Code import *
 from Rodrigo_Private_Code import *
 
 def earliest_arrival_time(dict, x, t_start, t_end, f):
+    listje = np.empty(841372, dtype=object)
+
     timeStart = time.time()
-    dict[x] = t_start
+    count = 0
     for line in iter(f):
+        #listje = np.append(listje, line)
+        np.put(listje, [count], line)
+        count += 1
+    f.close()
+    dict[x] = t_start
+    timeStart = time.time()
+    for line in listje:
         u, v, alpha, t = line.split()
         u, v, alpha, t = str(u), str(v), float(alpha), float(t)
-
         if (t+alpha) <= t_end and t >= float(dict[u]):
             if t+alpha < float(dict[v]):
                 dict[v] = t + alpha
         elif t >= t_end:
             break
     return time.time() - timeStart
+    #print(dict)
+    #return dict
 
 def earliest_arrival_time_xuan(dict, x, t_start, t_end, f):
     timeStart = time.time()
@@ -111,15 +122,18 @@ def runExperiments(nodes, db, f):
     return float(total) / float(len(nodes))
 
 if __name__ == "__main__":
-    src = 'dataset/test.csv'
+    src = 'dataset/out.epinions'
     #src = 'dataset/out.epinions'
-    db = initDict(src,-math.inf)
     f = open(src)
+    db = initDict(src,math.inf)
     dict = makeAdjacencyList(src)
-    print(dict)
-    nodes = select_top_10_degree(dict)
-    print(computerUFJ('1', dict))
-    print(runExperiments(nodes, db, f))
+    print(earliest_arrival_time(db, 'A', 0, math.inf, f))
+    adjl = makeAdjacencyList(src)
+    print(computerUFJ('A', adjl, 0, math.inf))
+    #print(dict)
+    #nodes = select_top_10_degree(dict)
+    #print(computerUFJ('1', dict))
+    #print(runExperiments(nodes, db, f))
     f.close()
 
     # #select 100 random nodes

@@ -65,6 +65,7 @@ def makeAdjacencyList(src):
 
 def computerUFJ(s, adjl, t_start, t_end):
     # pq = [] #priority quee min-heap
+    timeStart = time.time()
     d = {}
     open = {}
     open[s] = True
@@ -107,7 +108,7 @@ def computerUFJ(s, adjl, t_start, t_end):
                 #Update heap
                 add_task(neighbour[0], d[neighbour[0]])
 
-    return d, father
+    return time.time() - timeStart
 
 def f_value(adj, x, v, i, t_start, t_end):
     #cost is traversal cost
