@@ -230,7 +230,12 @@ def get_max_au(dict_lv, u, t):
     return max
 
 def remove_dominated_elements(dict):
-    pass
+    for node in dict:
+        dominated = []
+        for path in dict[node]:
+            for path2 in dict[node]:
+                pass
+
 
 if __name__ == "__main__":
     fastest_path_one_pass('A', 0, math.inf, 'dataset/test_earliest.csv')
