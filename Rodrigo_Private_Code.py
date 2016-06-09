@@ -1,3 +1,4 @@
+from collections import defaultdict
 import sys
 import math
 import timeit
@@ -181,10 +182,9 @@ def earliest_arrival_time(dict, x, t_start, t_end, f):
     # timeStart = time.time()
     dict[x] = t_start
     for line in iter(f):
-
         u, v, alpha, t = line.split()
         u, v, alpha, t = str(u), str(v), float(alpha), float(t)
-        if (t+alpha) <= t_end and t >= float(dict[u]):
+        if (t+alpha) <= t_end and t >= float(dict[u]): #tstart instead of dict u?
             if t+alpha < float(dict[v]):
                 dict[v] = t + alpha
         elif t >= t_end:
@@ -192,19 +192,89 @@ def earliest_arrival_time(dict, x, t_start, t_end, f):
     # return time.time() - timeStart
     return dict
 
+def fastest_path_one_pass(x, t_start, t_end, file_src):
+    lv = defaultdict(list) #init dict key is node value is a list (s,a) Lv
+    f = initDict(file_src, math.inf)
+    f[x] = 0
+    edge_stream = open(file_src)
+    for edge in iter(edge_stream): #for each edge (u, v, t, alpha) in the file
+        u, v, alpha, t = edge.split()
+        alpha, t = float(alpha), float(t)
+        if t >= t_start and t+alpha <= t_end:
+            if u == x:
+                if [t,t] not in lv[x]:
+                    lv[x].append([t,t])
+            su_prime, au_prime = get_max_au(lv, u, t)
+            sv, av = su_prime, t+alpha
+            sv_in_Lv = False # if sv in lv[v]
+            for x in lv[v]: #we could speed this section using bisect sort from python
+                if x[0] == sv:
+                    x[1] = av
+                    sv_in_Lv = True
+                    break
+            if not sv_in_Lv:
+                lv[v].append([sv, av])
+            remove_dominated_elements(lv) #Remove dominated elements in Lv
+            if av - sv < f[v]:
+                f[v] = av - sv
+        else:
+            break
+    edge_stream.close()
+    return f
+
+def get_max_au(dict_lv, u, t):
+    max = [-math.inf, -math.inf]
+    for element in dict_lv[u]:
+        if max[1] < element[1] and element[1] <= t:
+            max = element
+    return max
+
+def remove_dominated_elements(dict):
+    pass
+
 if __name__ == "__main__":
+    fastest_path_one_pass('A', 0, math.inf, 'dataset/test_earliest.csv')
+
+    #update test
+    lv = defaultdict(list)
+    lv['A'].append([3,3])
+    lv['A'].append([2,2])
+    lv['A'].append([1,5])
+    lv['B'].append([1,1])
+    sv = 1
+    av = 99
+    print(lv['A'])
+    for x in lv['A']:
+        if x[0] == sv:
+            x[1] = av
+    print(lv.items())
+
+
+
+
+    # print(get_max_au(lv, 'A', 10))
+
+    # lv = defaultdict(list)
+    # lv['A'].append(1)
+    # lv['A'].append([1,1])
+    # my_elements = lv['A']
+    # print(my_elements)
+    # print(lv.items())
+
+
+
+
+
+
 
 
     #earliest test
-    earliest_src_file = 'dataset/test_earliest.csv'
-    f = open(earliest_src_file)
-    db = initDict(earliest_src_file, math.inf)
-    # print(db)
-    print(earliest_arrival_time(db, 'A', 0, math.inf, f))
-
-
-
-
+    # earliest_src_file = 'dataset/test_earliest.csv'
+    # f = open(earliest_src_file)
+    # db = initDict(earliest_src_file, math.inf)
+    # # print(db)
+    # print(earliest_arrival_time(db, 'A', 0, math.inf, f))
+    # f.close()
 
 
     #test numpy
