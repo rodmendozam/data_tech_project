@@ -6,13 +6,14 @@ import random
 import time
 import operator
 import numpy as np
+import pandas
 from Hugo_Private_Code import *
 from Advaita_Private_Code import *
 from Rodrigo_Private_Code import *
 
 def earliest_arrival_time(dict, x, t_start, t_end, f):
     listje = np.empty(841372, dtype=object)
-
+    #print("hello")
     timeStart = time.time()
     count = 0
     for line in iter(f):
@@ -20,17 +21,21 @@ def earliest_arrival_time(dict, x, t_start, t_end, f):
         np.put(listje, [count], line)
         count += 1
     f.close()
-    dict[x] = t_start
     timeStart = time.time()
+    dict[x] = t_start
+    #print(listje)
+    totalTime = 0
     for line in listje:
         u, v, alpha, t = line.split()
-        u, v, alpha, t = str(u), str(v), float(alpha), float(t)
-        if (t+alpha) <= t_end and t >= float(dict[u]):
-            if t+alpha < float(dict[v]):
+        u, v, alpha, t = u, v, float(alpha), float(t)
+        timeStart = time.time()
+        if (t+alpha) <= t_end and t >= dict[u]:
+            if t+alpha < dict[v]:
                 dict[v] = t + alpha
         elif t >= t_end:
             break
-    return time.time() - timeStart
+        totalTime += time.time() - timeStart
+    return totalTime
     #print(dict)
     #return dict
 
@@ -122,12 +127,13 @@ def runExperiments(nodes, db, f):
     return float(total) / float(len(nodes))
 
 if __name__ == "__main__":
+    #src = 'dataset/test.csv'
     src = 'dataset/out.epinions'
-    #src = 'dataset/out.epinions'
     f = open(src)
     db = initDict(src,math.inf)
     dict = makeAdjacencyList(src)
-    print(earliest_arrival_time(db, 'A', 0, math.inf, f))
+    print(earliest_arrival_time(db, '111212',0, math.inf, f))
+    #print(earliest_arrival_time(db, '1',0, math.inf, f))
     adjl = makeAdjacencyList(src)
     print(computerUFJ('A', adjl, 0, math.inf))
     #print(dict)
