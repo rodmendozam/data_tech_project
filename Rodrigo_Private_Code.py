@@ -182,9 +182,10 @@ def earliest_arrival_time(dict, x, t_start, t_end, f):
     # timeStart = time.time()
     dict[x] = t_start
     for line in iter(f):
+        # u, v, alpha, t = line.split()
         u, v, alpha, t = line.split()
         u, v, alpha, t = str(u), str(v), float(alpha), float(t)
-        if (t+alpha) <= t_end and t >= float(dict[u]): #tstart instead of dict u?
+        if (t+alpha) <= t_end and t >= float(dict[u]):
             if t+alpha < float(dict[v]):
                 dict[v] = t + alpha
         elif t >= t_end:
@@ -206,6 +207,7 @@ def fastest_path_one_pass(x, t_start, t_end, file_src):
                     lv[x].append([t,t])
             su_prime, au_prime = get_max_au(lv, u, t)
             sv, av = su_prime, t+alpha
+
             sv_in_Lv = False # if sv in lv[v]
             for x in lv[v]: #we could speed this section using bisect sort from python
                 if x[0] == sv:
@@ -214,6 +216,8 @@ def fastest_path_one_pass(x, t_start, t_end, file_src):
                     break
             if not sv_in_Lv:
                 lv[v].append([sv, av])
+
+
             remove_dominated_elements(lv) #Remove dominated elements in Lv
             if av - sv < f[v]:
                 f[v] = av - sv
@@ -230,24 +234,52 @@ def get_max_au(dict_lv, u, t):
     return max
 
 def remove_dominated_elements(dict):
+    domination = [True for x in dict['A']]
+    for node in dict:
+        print(node)
+        path_lst = dict[node]
+        for index in range(0, len(path_lst)-1):
+            print(x_dominates_y(path_lst[index], path_lst[index+1]))
+
     pass
 
+def x_dominates_y(x,y):
+    if x[0] > y[0] and x[1] <= y[1]:
+        return True
+    elif x[0] == y[0] and x[1] < y[1]:
+        return True
+    else:
+        return False
+
 if __name__ == "__main__":
-    fastest_path_one_pass('A', 0, math.inf, 'dataset/test_earliest.csv')
+    # fastest_path_one_pass('A', 0, math.inf, 'dataset/test_earliest.csv')
 
     #update test
     lv = defaultdict(list)
-    lv['A'].append([3,3])
-    lv['A'].append([2,2])
     lv['A'].append([1,5])
-    lv['B'].append([1,1])
-    sv = 1
-    av = 99
-    print(lv['A'])
-    for x in lv['A']:
-        if x[0] == sv:
-            x[1] = av
-    print(lv.items())
+    lv['A'].append([2,4])
+    lv['A'].append([3,4])
+    lv['A'].append([1,3])
+    lv['A'].append([1,3])
+    # lv['B'].append([1,1])
+    # print(len(lv['A']))
+
+    # print(lv.items())
+
+
+    remove_dominated_elements(lv)
+
+    # for node in lv:
+    #     print(node)
+    #     for path in lv[node]:
+    #         print(path)
+    #
+    #
+    #
+    # for x in lv['A']:
+    #     if x[0] == sv:
+    #         x[1] = av
+    # print(lv.items())
 
 
 
