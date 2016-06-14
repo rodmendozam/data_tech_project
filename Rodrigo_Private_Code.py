@@ -1,3 +1,4 @@
+from collections import Counter
 from collections import defaultdict
 import sys
 import math
@@ -62,6 +63,7 @@ def makeAdjacencyList(src):
             dict[u] = set()
         entry = (v, alpha,t)
         dict[u].add(entry)
+    f.close()
     return dict
 
 def computerUFJ(s, adjl, t_start, t_end):
@@ -87,7 +89,10 @@ def computerUFJ(s, adjl, t_start, t_end):
             # heapq.heappush(pq, entry)
             add_task(key, 0)
     while pq:
-        rootNode = pop_task()
+        try:
+            rootNode = pop_task()
+        except:
+            break
         open[rootNode] = False
 
         if rootNode not in adjl:
@@ -123,6 +128,13 @@ def f_value(adj, x, v, i, t_start, t_end):
     return min, cost
 
 def computerUFJ_latest(s, adjl, t_start, t_end):
+
+    pq = []                         # list of entries arranged in a heap
+    entry_finder = {}               # mapping of tasks to entries
+    REMOVED = '<removed-task>'      # placeholder for a removed task
+    counter = itertools.count()     # unique sequence count
+
+    time_start = time.time()
     # pq = [] #priority quee min-heap
     d = {}
     open = {}
@@ -144,7 +156,12 @@ def computerUFJ_latest(s, adjl, t_start, t_end):
             # heapq.heappush(pq, entry)
             add_task(key, 0)
     while pq:
-        rootNode = pop_task()
+        try:
+            rootNode = pop_task()
+        except:
+            print('HELLO')
+            break
+
         open[rootNode] = False
 
         if rootNode not in adjl:
@@ -166,7 +183,8 @@ def computerUFJ_latest(s, adjl, t_start, t_end):
                 #Update heap
                 add_task(neighbour[0], d[neighbour[0]])
 
-    return d, father
+    # return d, father
+    return time.time() - time_start
 
 def initDict(src, value):
     f = open(src)
@@ -251,23 +269,52 @@ def x_dominates_y(x,y):
     else:
         return False
 
+
+def runExperiments_UFJ(nodes, adj_db):
+    total = 0
+    for node in nodes:
+        total +=  computerUFJ_latest(node, adj_db, 0, math.inf)
+
+        # total += latest_depature_time(db.copy(), node,0, math.inf, f)
+        # total += earliest_arrival_time(db.copy(), node, 0, math.inf, f)
+        # f.seek(0)
+    return float(total) / float(len(nodes))
+
+def select_100_random(src):
+    graph = initDict(src, math.inf)
+    result  = []
+    for i in range(0, 100):
+        result.append( random.choice(list(graph.keys())) )
+    return result
+
+def select_top_10_degree_collection(src):
+    f = open(src)
+    list = []
+    for line in iter(f):
+        u, v, alpha, t = line.split()
+        u, v, alpha, t = str(u), str(v), float(alpha), float(t)
+        list.append(v)
+    my = Counter(list)
+    xy = my.most_common(10)
+    f.close()
+    return [x[0] for x in xy]
+
 if __name__ == "__main__":
     # fastest_path_one_pass('A', 0, math.inf, 'dataset/test_earliest.csv')
 
     #update test
-    lv = defaultdict(list)
-    lv['A'].append([1,5])
-    lv['A'].append([2,4])
-    lv['A'].append([3,4])
-    lv['A'].append([1,3])
-    lv['A'].append([1,3])
-    # lv['B'].append([1,1])
-    # print(len(lv['A']))
+    # lv = defaultdict(list)
+    # lv['A'].append([1,5])
+    # lv['A'].append([2,4])
+    # lv['A'].append([3,4])
+    # lv['A'].append([1,3])
+    # lv['A'].append([1,3])
+    # # lv['B'].append([1,1])
+    # # print(len(lv['A']))
+    # # print(lv.items())
+    # remove_dominated_elements(lv)
 
-    # print(lv.items())
 
-
-    remove_dominated_elements(lv)
 
     # for node in lv:
     #     print(node)
@@ -321,11 +368,26 @@ if __name__ == "__main__":
 
     #test for latest on Xuan
     # my_adj = makeAdjacencyList('dataset/ufj_test.csv')
+
     # dd, ff = computerUFJ_latest('A', my_adj, 0, math.inf)
     # print(dd)
     # print('Father section')
     # print(ff)
     # print(f_value(my_adj, 'A', 'B', 0, 0, math.inf))
+
+
+    #time-test
+    src_test = 'dataset/ufj_test.csv'
+    src_epinions = 'dataset/out.epinions'
+    src_facebook = 'datasets_sorted/facebook_sort.txt'
+    src = src_facebook
+
+    my_adj = makeAdjacencyList(src)
+    # nodes = select_100_random(src)
+    nodes = select_top_10_degree_collection(src)
+    print(runExperiments_UFJ(nodes, my_adj))
+
+
 
 
 
